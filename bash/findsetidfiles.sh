@@ -19,7 +19,7 @@ echo "Setuid files:"
 echo "============="
 find / -type f -executable -perm -4000 -ls 2>/dev/null | sort -k 5
 echo " "
-echo "12 Largest files on the system"
+echo "12 largest files on the system"
 echo "============="
 find / -type f -exec ls -l --block-size=M {} + 2>/dev/null |sort -k 5 -r -n | head -n 12 | awk '{print $3 "\x20" $5 "\x20" $9}'
 
