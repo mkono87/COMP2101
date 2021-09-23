@@ -23,8 +23,27 @@ hostname=$(hostname)
 date=$(date +%A)
 time=$(date +%r)
 
-if [$date == "Wednesday"]; then
-  title = "testname"
+if [ $date == Monday ]; then
+  title= "Most Powerfull"
+elif [ $date == Tuesday ]; then
+  title= "Awesome"
+
+elif [ $date == Wednesday ]; then
+  title="Lord"
+  
+elif [ $date == Thursday ]; then
+  title="That Guy"
+
+elif [ $date == Friday]; then
+  title="Smartest"
+
+elif [ $date == Saturday ]; then
+  title="Tech Genius"
+
+elif [ $date == Sunday ]; then
+  title="Coolest Cat"
+
+fi
 
 ###############
 # Main        #
