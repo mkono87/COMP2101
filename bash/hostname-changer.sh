@@ -37,7 +37,7 @@ echo ""
 
 currenthostname=$(grep $oldhostname /etc/hostname)
 
-if ! [ $currenthostname==$newhostname ]; then
+if [ $currenthostname!=$newhostname ]; then
   sudo hostnamectl set-hostname $newhostname && echo "The hostname has now been changed to $newhostname. Please reboot your computer for changes to take full effect."
 else
   echo "hostname is already set to $currenthostname, no changes have been made."
