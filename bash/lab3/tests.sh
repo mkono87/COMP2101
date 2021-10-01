@@ -41,8 +41,8 @@ file="/tmp"
 # TASK 7: Add testing to print out which file newest, or if they are the same age
 echo ""
 
-[ /etc/hosts -nt /etc/resolv.conf ] && echo "/etc/hosts is newer than /etc/resolv.conf"
-[ /etc/hosts -ot /etc/resolv.conf ] && echo "/etc/resolv.conf is newer than /etc/hosts"
+[ /etc/hosts -nt /etc/resolv.conf ] && echo "/etc/hosts is newer" || echo "/etc/resolv.conf is newer."
+[ /etc/hosts -ot /etc/resolv.conf ] && echo "/etc/resolv.conf is newer" || echo "etc/hosts is newer"
 [ ! /etc/hosts -nt /etc/resolv.conf -a ! /etc/hosts -ot /etc/resolv.conf ] && echo "/etc/hosts is the same age as /etc/resolv.conf"
 
 # this section demonstrates doing numeric tests in bash
@@ -51,8 +51,8 @@ echo ""
 # TASK 2: Improve it by adding a test to tell the user if the numbers are even or odd
 # TASK 3: Improve it by adding a test to tell the user is the second number is a multiple of the first number
 
-firstNumber=4
-secondNumber=7
+read -p "Please pick a first number: " firstNumber
+read -p "Please pick a second number: " secondNumber
 
 [ $firstNumber -eq $secondNumber ] && echo "The two numbers are the same"
 [ $firstNumber -ne $secondNumber ] && echo "The two numbers are not the same"
@@ -62,6 +62,20 @@ secondNumber=7
 [ $firstNumber -le $secondNumber ] && echo "The first number is less than or equal to the second number"
 [ $firstNumber -ge $secondNumber ] && echo "The first number is greater than or equal to the second number"
 
+if [ $((firstNumber%2)) -eq 0 ]
+then
+  echo "The First number is even"
+else
+  echo "The first number is odd"
+fi
+
+if [ $((secondNumber%2)) -eq 0 ]
+then
+  echo "The second number is even"
+else
+  echo "The second number is odd"
+fi
+
 # This section demonstrates testing variables
 
 # Test if the USER variable exists
@@ -69,9 +83,11 @@ secondNumber=7
 # TASK 2: Add a command that tells the user if the USER variable exists, but is empty
 [ -v USER ] && echo "The variable SHELL exists"
 
+[ -z USER ] && echo" The variable is empty." || echo "The variable contains '$USER'"
+
 # Tests for string data
 # TASK 3: Modify the command to use the != operator instead of the = operator, without breaking the logic of the command
 # TASK 4: Use the read command to ask the user running the script to give us strings to use for the tests
 a=1
 b=01
-[ $a = $b ] && echo "$a is alphanumerically equal to $b" || echo "$a is not alphanumerically equal to $b"
+[ $a != $b ] && echo "$a is not alphanumerically equal to $b" || echo "$a is alphanumerically equal to $b"
