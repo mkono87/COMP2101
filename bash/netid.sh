@@ -20,6 +20,28 @@
 #         Your script must allow the user to specify both verbose mode and an interface name if they want
 # TASK 2: Dynamically identify the list of interface names for the computer running the script, and use a for loop to generate the report for every interface except loopback
 
+verbose="no"
+interface=""
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+  -v | --verbose )
+    verbose="yes"
+    echo "Verbose logging turned on"
+    ;;
+  ens33 )
+    interface="ens33"
+    ;;
+  * )
+    echo "Unknown argument, exiting"
+    exit
+    ;;
+  esac
+  shift
+done
+
+
+
 ################
 # Data Gathering
 ################
@@ -72,7 +94,7 @@ EOF
 #####
 
 # define the interface being summarized
-interface="eno1"
+# interface="ens33"
 [ "$verbose" = "yes" ] && echo "Reporting on interface(s): $interface"
 
 [ "$verbose" = "yes" ] && echo "Getting IPV4 address and name for interface $interface"
