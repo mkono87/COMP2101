@@ -21,26 +21,65 @@
 # TASK 2: Dynamically identify the list of interface names for the computer running the script, and use a for loop to generate the report for every interface except loopback
 
 verbose="no"
-interface=""
+interface="ens33"
 
+#####
+
+ifArray=()
+for iface in $(ifconfig -a | cut -d ' ' -f1| tr ':' '\n' | awk NF); do
+  if [ $iface != "lo" ]; then
+    ifArray+=("$iface")
+  fi
+done
+
+#####
+#Command Arguments check
+#####
+
+interface="ens33"
 while [ $# -gt 0 ]; do
   case "$1" in
   -v | --verbose )
     verbose="yes"
     echo "Verbose logging turned on"
     ;;
-  ens33 )
-    interface="ens33"
-    ;;
-  * )
+  -* )
     echo "Unknown argument, exiting"
     exit
+    ;;
+  # Any string not starting with -
+  *)
+    # Check if we already set an interface
+    if [ "$interface" == "${ifArray[@]}" ]; then
+      interface="$1"
+    fi
     ;;
   esac
   shift
 done
 
 
+
+
+
+# while [ $# -gt 0 ]; do
+#   case "$1" in
+#   -v | --verbose )
+#     verbose="yes"
+#     echo "Verbose logging turned on"
+#     ;;
+#     ens33 )
+#       interface="ens33"
+#     ;;
+#   * )
+#     echo "Unknown argument, exiting"
+#     exit
+#     ;;
+#   esac
+#   shift
+# done
+
+echo "$interfaceList"
 
 ################
 # Data Gathering
@@ -125,3 +164,18 @@ EOF
 #####
 # End of per-interface report
 #####
+
+#####
+# Get list of available devices
+#####
+
+[ "$verbose" = "yes" ] && echo "Gathering list of available interfaces"
+echo""
+echo "List of available interfaces"
+echo "${ifArray[@]}"
+
+for names in $ifArray[@]; do
+if [ "ens39" == {$ifArray[@]} ]; then
+  echo "It should be working"
+  fi
+done
