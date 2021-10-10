@@ -25,11 +25,12 @@ interface="ens33"
 
 #####
 
-interfaceList=$(ip -o link show | awk -F': ' '{print $2}')
+interfaceList=$(ip a | awk '/: e/{gsub(/:/,"");print $2}')
 
 ####
 #Command argument check
 ####
+
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -44,14 +45,14 @@ while [ $# -gt 0 ]; do
   # Any string not starting with -
   *)
     # Check if we already set an interface
-    if [ $interfaceList != "$interface" ]
-    then
-      echo >&2 "Interface not valid"
+    for a in $interfaceList; do
+      if [ $a == $1 ]; then
+        interface="$1"
+      else
+      echo "Unknown interface, exiting"
       exit 2
-    else
-      interface="$1"
-      break
-    fi
+      fi
+      done
     ;;
   esac
   shift
@@ -150,7 +151,6 @@ EOF
 [ "$verbose" = "yes" ] && echo "Gathering list of available interfaces"
 echo "Available Interfaces"
 
-ifArray=()
 for i in $interfaceList; do
 if [ $i != "lo" ]; then
 echo $i
