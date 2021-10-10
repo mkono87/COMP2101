@@ -25,43 +25,39 @@ interface="ens33"
 
 #####
 
-interfaceList=$(ifconfig -a | sed 's/[ \t].*//;/^\(lo\|\)$/d')
+interfaceList=$(ip -o link show | awk -F': ' '{print $2}')
 
-#####
-#Command Arguments check
-#####
+####
+#Command argument check
+####
 
-# interface="ens33"
-# while [ $# -gt 0 ]; do
-#   case "$1" in
-#   -v | --verbose )
-#     verbose="yes"
-#     echo "Verbose logging turned on"
-#     ;;
-#   -* )
+while [ $# -gt 0 ]; do
+  case "$1" in
+  -v | --verbose )
+    verbose="yes"
+    echo "Verbose logging turned on"
+    ;;
+  -* )
+    echo "Unknown argument, exiting"
+    exit
+    ;;
+  # Any string not starting with -
+  *)
+    # Check if we already set an interface
+    if [ $interfaceList != "$interface" ]
+    then
+      echo >&2 "Interface not valid"
+      exit 2
+    else
+      interface="$1"
+      break
+    fi
+    ;;
+  esac
+  shift
+done
 
 
-
-
-
-# while [ $# -gt 0 ]; do
-#   case "$1" in
-#   -v | --verbose )
-#     verbose="yes"
-#     echo "Verbose logging turned on"
-#     ;;
-#     ens33 )
-#       interface="ens33"
-#     ;;
-#   * )
-#     echo "Unknown argument, exiting"
-#     exit
-#     ;;
-#   esac
-#   shift
-# done
-
-echo "$interfaceList"
 
 ################
 # Data Gathering
@@ -152,9 +148,11 @@ EOF
 #####
 
 [ "$verbose" = "yes" ] && echo "Gathering list of available interfaces"
+echo "Available Interfaces"
 
-for ifname in $interfaceList; do
-  if [ ifname != $interfaceList]
-  echo @ifname
-  fi
+ifArray=()
+for i in $interfaceList; do
+if [ $i != "lo" ]; then
+echo $i
+fi
 done
