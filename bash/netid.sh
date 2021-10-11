@@ -48,11 +48,9 @@ while [ $# -gt 0 ]; do
     for a in $interfaceList; do
       if [ $a == $1 ]; then
         interface="$1"
-      else
-      echo "Unknown interface, exiting"
-      exit 2
       fi
       done
+    [ $1 != $interface ] && echo "Uknown interface, exiting" && exit 2
     ;;
   esac
   shift
