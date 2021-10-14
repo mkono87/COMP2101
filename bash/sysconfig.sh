@@ -39,6 +39,7 @@ Available Commands:
 --Disk
 --Printer
 EOF
+exit
 }
 
 # This function will remove all the temp files created by the script
