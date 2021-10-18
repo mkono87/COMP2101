@@ -44,7 +44,7 @@ while [ $# -gt 0 ]; do
     ;;
   # Any string not starting with -
   *)
-    # Check if we already set an interface
+    # Check if there is an interface match
     for a in $interfaceList; do
       if [ $a == $1 ]; then
         interface="$1"
