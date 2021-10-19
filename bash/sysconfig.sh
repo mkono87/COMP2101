@@ -15,16 +15,28 @@
 # Usage:
 #   error-message ["some text to print to stderr"]
 function error-message {
-echo ""
+  echo "An error as occured" >&2
+ 
 }
 
 # This function will send a message to stderr and exit with a failure status
 # Usage:
 #   error-exit ["some text to print to stderr" [exit-status]]
 function error-exit {
-echo ""
+echo $1 >&2
+exit
 }
+
+function cleanup {
+
+  rm -R /tmp/sysreport.$$ /tmp/sysinfo.$$ /tmp/memoryinfo.$$ /tmp/businfo.$$ /tmp/cpuinfo.$$ 2> /dev/null
+  echo "Cleanup done!"
+  exit
+}
+
 #This function displays help information if the user asks for it on the command line or gives us a bad command line
+
+
 function displayhelp {
 cat <<EOF
 Available Commands:
@@ -41,6 +53,10 @@ Available Commands:
 EOF
 exit
 }
+
+trap cleanup SIGHUP
+trap cleanup SIGTERM
+trap cleanup SIGINT
 
 # This function will remove all the temp files created by the script
 # The temp files are all named similarly, "/tmp/somethinginfo.$$"
@@ -163,3 +179,5 @@ cat /tmp/sysreport.$$
 
 # cleanup temporary files
 cleanup
+
+
