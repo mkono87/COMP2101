@@ -16,7 +16,10 @@
 #   error-message ["some text to print to stderr"]
 function error-message {
   echo "An error as occured" >&2
- 
+  echo "Cleaning up files an exiting."
+  cleanup
+  exit 2
+
 }
 
 # This function will send a message to stderr and exit with a failure status
@@ -24,13 +27,15 @@ function error-message {
 #   error-exit ["some text to print to stderr" [exit-status]]
 function error-exit {
 echo $1 >&2
-exit
+echo "Exiting"
+exit 2
 }
 
 function cleanup {
-
+  echo "Interuption!!"
+  echo "Cleaning up files and exiting"
   rm -R /tmp/sysreport.$$ /tmp/sysinfo.$$ /tmp/memoryinfo.$$ /tmp/businfo.$$ /tmp/cpuinfo.$$ 2> /dev/null
-  echo "Cleanup done!"
+  
   exit
 }
 
