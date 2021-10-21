@@ -25,14 +25,13 @@ function error-message {
 #   error-exit ["some text to print to stderr" [exit-status]]
 function error-exit {
 echo $1 >&2
-cleanup
 echo "Exiting"
 exit 2
 
 }
 
 function cleanup {
-  echo "Cleaning up files"
+  echo "Cleaning up temp files"
   rm -R /tmp/sysreport.$$ /tmp/sysinfo.$$ /tmp/memoryinfo.$$ /tmp/businfo.$$ /tmp/cpuinfo.$$ 2> /dev/null
   exit
 }
