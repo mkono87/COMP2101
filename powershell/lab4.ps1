@@ -66,13 +66,36 @@ ft -auto Manufacturer, "Size(MB)", "Speed(MHz)", Bank, Slot
 
 
 
+function diskinfo{
+$diskdrives = Get-CIMInstance CIM_diskdrive
+
+foreach ($disk in $diskdrives) {
+    $partitions = $disk|get-cimassociatedinstance -resultclassname CIM_diskpartition
+    foreach ($partition in $partitions) {
+          $logicaldisks = $partition | get-cimassociatedinstance -resultclassname CIM_logicaldisk
+          foreach ($logicaldisk in $logicaldisks) {
+                   new-object -typename psobject -property @{Manufacturer=$disk.Manufacturer
+                                                             Location=$partition.deviceid
+                                                             Drive=$logicaldisk.deviceid
+                                                             "Size(GB)"=$logicaldisk.size / 1gb -as [int]
+                                                             }
+           }
+        }
+    }
+}
+diskinfo
 
 
 
-
-
-
-
+function netinfo{
+    get-ciminstance win32_networkadapterconfiguration |
+  Where-Object {$_.IPEnabled -eq 'True'} |
+    Add-Member -MemberType AliasProperty -Name DNSServer -Value DNSServerSearchOrder -PassThru |
+      Add-Member -MemberType AliasProperty -Name SubnetMask -Value IPSubnet -PassThru |
+        Select-Object Description,index,IPAddress,SubnetMask,DNSServer,DNSDomain |
+          Format-table -AutoSize
+}
+netinfo
 
 
 
