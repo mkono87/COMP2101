@@ -18,34 +18,34 @@ function OS {
         'Build Version' = $OsInfo.Version
         'Installed On' = $OsInfo.InstallDate
         'Architecture' = $OsInfo.OSArchitecture
-    }
-$CustomOSInfo
 
+    }
+$CustomOSInfo | Format-List
 }
+OS
+
 # Processor Information
 function CPU {
 write-host ("Processor Information")
 Get-CimInstance win32_processor | 
 foreach {
     new-object -TypeName psobject -Property @{
-        L1Cache= if ($_.L1CacheSize) {$_.L1CacheSize}
+        "L1Cache(Mb)"= if ($_.L1CacheSize) {$_.L1CacheSize}
         else {"Not Available"}       
-        L2Cache= if ($_.L2CacheSize) {$_.L2CacheSize}
+        "L2Cache(Mb)"= if ($_.L2CacheSize) {$_.L2CacheSize}
         else {"Not Available"}
-        L3Cache= if ($_.L3CacheSize) {$_.L3CacheSize}
+        "L3Cache(Mb)"= if ($_.L3CacheSize) {$_.L3CacheSize}
         else {"Not Available"}
 
-    }}| Format-List Name,NumberOfCores,L1Cache,L2Cache,L3Cache
+    }}| Format-List Name,NumberOfCores,"L1Cache(Mb)","L2Cache(Mb)","L3Cache(Mb)"
 } 
-
-
 
 CPU
 
 
 
 #Memory Interformation
-
+function memory{
 $totalcapacity = 0 
 Write-host ("Memory Information")
 get-wmiobject -class win32_physicalmemory |  
@@ -62,6 +62,7 @@ foreach {
 } | 
 ft -auto Manufacturer, "Size(MB)", "Speed(MHz)", Bank, Slot 
 "Total RAM: ${totalcapacity}GB "
+}
 
 
 
@@ -72,12 +73,6 @@ ft -auto Manufacturer, "Size(MB)", "Speed(MHz)", Bank, Slot
 
 
 
-
-
-
-
-# systeminfo | Format-List Name,Model,Manufacturer,SystemType
-# Os | Format-List
 
 
 
