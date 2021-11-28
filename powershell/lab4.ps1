@@ -55,14 +55,14 @@ foreach {
     new-object -TypeName psobject -Property @{ 
                 Manufacturer = $_.manufacturer 
                 "Speed(MHz)" = $_.speed 
-                "Size(MB)" = $_.capacity/1gb 
+                "Size(GB)" = $_.capacity/1gb 
                 Bank = $_.banklabel 
                 Slot = $_.devicelocator 
     } 
     $totalcapacity += $_.capacity/1gb
 
 } | 
-ft -auto Manufacturer, "Size(MB)", "Speed(MHz)", Bank, Slot 
+ft -auto Manufacturer, "Size(GB)", "Speed(MHz)", Bank, Slot 
 "Total RAM: ${totalcapacity}GB "
 }
 
@@ -109,6 +109,7 @@ netinfo | Format-Table
 
 
 function GPU {
+    Write-Host("Graphics Information")
     $GpuInfo = Get-WMIobject -Class Win32_videocontroller
     foreach ($device in $GpuInfo){
         new-object -typename psobject -property @{
