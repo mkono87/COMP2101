@@ -7,7 +7,7 @@ function systeminfo{
     write-host ("System Information")
     $SystemInfo 
 }
-systeminfo | Format-List
+systeminfo | Format-List 
 
 # Operating System Information
 function OS {
@@ -20,9 +20,9 @@ function OS {
         'Architecture' = $OsInfo.OSArchitecture
 
     }
-$CustomOSInfo | Format-List
+$CustomOSInfo
 }
-OS
+OS | Format-list
 
 # Processor Information
 function CPU {
@@ -31,16 +31,18 @@ Get-CimInstance win32_processor |
 foreach {
     new-object -TypeName psobject -Property @{
         "L1Cache(Mb)"= if ($_.L1CacheSize) {$_.L1CacheSize}
-        else {"Not Available"}       
+        else {"Data unavailable"}       
         "L2Cache(Mb)"= if ($_.L2CacheSize) {$_.L2CacheSize}
-        else {"Not Available"}
+        else {"Data unavailable"}
         "L3Cache(Mb)"= if ($_.L3CacheSize) {$_.L3CacheSize}
-        else {"Not Available"}
+        else {"Data unavailable"}
+        "Name" = $_.Name
+        "Core Count" = $_.NumberOfCores
 
-    }}| Format-List Name,NumberOfCores,"L1Cache(Mb)","L2Cache(Mb)","L3Cache(Mb)"
+    }}| Format-List Name,"Core Count","L1Cache(Mb)","L2Cache(Mb)","L3Cache(Mb)"
 } 
 
-CPU
+CPU | Format-List
 
 
 
@@ -64,9 +66,12 @@ ft -auto Manufacturer, "Size(MB)", "Speed(MHz)", Bank, Slot
 "Total RAM: ${totalcapacity}GB "
 }
 
+memory | format-table
+
 
 
 function diskinfo{
+Write-Host ("Disk Information")
 $diskdrives = Get-CIMInstance CIM_diskdrive
 
 foreach ($disk in $diskdrives) {
@@ -74,20 +79,23 @@ foreach ($disk in $diskdrives) {
     foreach ($partition in $partitions) {
           $logicaldisks = $partition | get-cimassociatedinstance -resultclassname CIM_logicaldisk
           foreach ($logicaldisk in $logicaldisks) {
-                   new-object -typename psobject -property @{Manufacturer=$disk.Manufacturer
+                   new-object -typename psobject -property @{Manufacturer=$disk.Caption
                                                              Location=$partition.deviceid
                                                              Drive=$logicaldisk.deviceid
                                                              "Size(GB)"=$logicaldisk.size / 1gb -as [int]
+                                                             "Free Space(GB)" =$logicaldisk.FreeSpace  / 1gb -as [int]
+                                                             "% Free"  = [Math]::round((($logicaldisk.freespace/$logicaldisk.size) * 100))
                                                              }
            }
         }
     }
 }
-diskinfo
+diskinfo | Format-Table Manufacturer,Drive,"Size(GB)","Free Space(GB)","% Free" -AutoSize
 
 
 
 function netinfo{
+Write-Host ("Network Interface Information")
     get-ciminstance win32_networkadapterconfiguration |
   Where-Object {$_.IPEnabled -eq 'True'} |
     Add-Member -MemberType AliasProperty -Name DNSServer -Value DNSServerSearchOrder -PassThru |
@@ -95,7 +103,21 @@ function netinfo{
         Select-Object Description,index,IPAddress,SubnetMask,DNSServer,DNSDomain |
           Format-table -AutoSize
 }
-netinfo
+netinfo | Format-Table
 
 
 
+
+function GPU {
+    $GpuInfo = Get-WMIobject -Class Win32_videocontroller
+    foreach ($device in $GpuInfo){
+        new-object -typename psobject -property @{
+            "Vendor"=$device.AdapterCompatibility
+            "Model"=$device.Caption
+            "Resolution"="$($device.CurrentHorizontalResolution) X $($device.CurrentVerticalResolution)"
+
+        }
+    }    
+}
+
+GPU | Format-List
