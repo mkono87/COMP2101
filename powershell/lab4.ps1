@@ -11,12 +11,12 @@ function systeminfo{
                     "Manufacturer" = $_.manufacturer 
                     "Model" = $_.model 
                     "System Type" = $_.systemtype 
-                    "Arch Type" = $_.systemtype
+                    "Status" = $_.status
         }
     }
 }
 
-systeminfo | format-list "Name","Manufacturer","Model","System Type","Arch Type"
+systeminfo | format-list "Name","Manufacturer","Model","System Type","Status"
 
 # Operating System Information
 function OS {
@@ -40,18 +40,18 @@ Get-CimInstance win32_processor |
 foreach {
     new-object -TypeName psobject -Property @{
         "L1Cache(Mb)"= if ($_.L1CacheSize) {$_.L1CacheSize}
-        else {"Data unavailable"}       
+        else {"Data Unavailable"}       
         "L2Cache(Mb)"= if ($_.L2CacheSize) {$_.L2CacheSize}
-        else {"Data unavailable"}
+        else {"Data Unavailable"}
         "L3Cache(Mb)"= if ($_.L3CacheSize) {$_.L3CacheSize}
         else {"Data Unavailable"}
         "Name" = $_.Name
         "Core Count" = $_.NumberOfCores
 
-    }}| Format-List Name,"Core Count","L1Cache(Mb)","L2Cache(Mb)","L3Cache(Mb)"
+    }}
 } 
 
-CPU | Format-List
+CPU | Format-List  Name,"Core Count","L1Cache(Mb)","L2Cache(Mb)","L3Cache(Mb)"
 
 
 
@@ -99,7 +99,7 @@ foreach ($disk in $diskdrives) {
         }
     }
 }
-diskinfo | Format-Table Manufacturer,Drive,"Size(GB)","Free Space(GB)","% Free" -AutoSize
+diskinfo | Format-Table Manufacturer,Drive,"Size(GB)","Free Space(GB)","% Free"
 
 
 
