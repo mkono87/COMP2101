@@ -3,11 +3,20 @@
 
 # Generic System Information
 function systeminfo{
-    $SystemInfo =  Get-WmiObject Win32_computersystem
-    write-host ("System Information")
-    $SystemInfo 
+    Write-host ("System Information")
+    get-wmiobject -class win32_computersystem |  
+    foreach { 
+        new-object -TypeName psobject -Property @{ 
+                    "Name" = $_.name
+                    "Manufacturer" = $_.manufacturer 
+                    "Model" = $_.model 
+                    "System Type" = $_.systemtype 
+                    "Arch Type" = $_.systemtype
+        }
+    }
 }
-systeminfo | Format-List 
+
+systeminfo | format-list "Name","Manufacturer","Model","System Type","Arch Type"
 
 # Operating System Information
 function OS {
@@ -35,7 +44,7 @@ foreach {
         "L2Cache(Mb)"= if ($_.L2CacheSize) {$_.L2CacheSize}
         else {"Data unavailable"}
         "L3Cache(Mb)"= if ($_.L3CacheSize) {$_.L3CacheSize}
-        else {"Data unavailable"}
+        else {"Data Unavailable"}
         "Name" = $_.Name
         "Core Count" = $_.NumberOfCores
 
@@ -122,3 +131,5 @@ function GPU {
 }
 
 GPU | Format-List
+
+
