@@ -48,10 +48,11 @@ foreach {
         "Name" = $_.Name
         "Core Count" = $_.NumberOfCores
 
-    }}
+    }
+  }| Format-List  Name,"Core Count","L1Cache(Mb)","L2Cache(Mb)","L3Cache(Mb)"
 } 
 
-CPU | Format-List  Name,"Core Count","L1Cache(Mb)","L2Cache(Mb)","L3Cache(Mb)"
+
 
 
 
