@@ -1,5 +1,4 @@
-function Get-SystemInformation {
-    param(
+param(
       [switch]$System,
       [switch]$Disks, 
       [switch]$Network
@@ -15,5 +14,3 @@ function Get-SystemInformation {
       if ($Network -eq $true) {
         Get-Net
     }
-
-}
