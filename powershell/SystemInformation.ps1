@@ -14,3 +14,10 @@ param(
       if ($Network -eq $true) {
         Get-Net
     }
+    if ((($system -and $disks) -and $network) -eq $false) 
+    {
+        Get-System
+        Get-OS
+        Get-Memory
+        Get-GPU
+    }
