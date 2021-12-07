@@ -20,4 +20,5 @@ param(
         Get-OS
         Get-Memory
         Get-GPU
+        Get-Disk
     }
